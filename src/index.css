@@ -4,6 +4,16 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
+/* Custom breakpoint for extra small devices */
+@media (min-width: 475px) {
+  .xs\:flex {
+    display: flex;
+  }
+  .xs\:hidden {
+    display: none;
+  }
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
