@@ -1,0 +1,530 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom breakpoint for extra small devices */
+@media (min-width: 475px) {
+  .xs\:flex {
+    display: flex;
+  }
+
+  .xs\:hidden {
+    display: none;
+  }
+}
+
+@layer base {
+  :root {
+    /* Premium Light Mode */
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    /* Vibrant Emerald */
+    --primary: 142.1 76.2% 36.3%;
+    --primary-foreground: 355.7 100% 97.3%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 142.1 76.2% 36.3%;
+
+    --radius: 0.5rem;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Custom tokens */
+    --success: 142 76% 36%;
+    --success-foreground: 355.7 100% 97.3%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 48 96% 89%;
+
+    /* Document preview */
+    --document-bg: 0 0% 100%;
+    --document-text: 222.2 84% 4.9%;
+    --document-border: 214.3 31.8% 91.4%;
+  }
+
+  .dark {
+    /* Premium Dark Mode - Deep Slate */
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    /* Vibrant Emerald for Dark */
+    --primary: 142.1 70.6% 45.3%;
+    --primary-foreground: 144.9 80.4% 10%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 142.4 71.8% 29.2%;
+
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  /* Modern Headlines */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply tracking-tight;
+    font-family: 'Outfit', 'Inter', system-ui, sans-serif;
+  }
+
+  /* Document preview styling */
+  .document-preview {
+    font-family: 'Georgia', 'Times New Roman', Times, serif;
+    line-height: 1.8;
+    text-align: justify;
+    color: #000000 !important;
+    letter-spacing: 0.8px;
+  }
+
+  .document-preview * {
+    color: #000000 !important;
+    letter-spacing: 0.8px;
+  }
+
+  .document-preview h1 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.5rem;
+    /* Reduced from 1.75rem */
+    font-weight: 700;
+    text-align: left;
+    /* Changed from center */
+    margin-bottom: 1.5rem;
+    color: #000000 !important;
+    letter-spacing: 1px;
+  }
+
+  .document-preview h2 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.25rem;
+    /* Reduced from 1.4rem */
+    font-weight: 600;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+    text-align: left;
+    color: #000000 !important;
+    letter-spacing: 1px;
+  }
+
+  .document-preview p {
+    margin-bottom: 1.25rem;
+    text-indent: 0;
+    /* Modern style typically doesn't intent unless specific */
+    color: #000000 !important;
+    letter-spacing: 0.8px;
+  }
+
+  .document-preview strong,
+  .document-preview b {
+    color: #000000 !important;
+    letter-spacing: 0.8px;
+  }
+
+  .document-preview em,
+  .document-preview i {
+    color: #000000 !important;
+    letter-spacing: 0.8px;
+  }
+
+  /* Selection Color */
+  ::selection {
+    background-color: hsl(var(--primary) / 0.2);
+    color: hsl(var(--primary));
+  }
+
+  /* Fade in animation */
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.4s ease-out;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-muted-foreground/20 rounded-full hover:bg-muted-foreground/40 transition-colors;
+}
+
+/* Typing animation for AI streaming */
+@keyframes typing-cursor {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
+}
+
+.typing-cursor::after {
+  content: '|';
+  animation: typing-cursor 1s infinite;
+  color: hsl(var(--primary));
+  margin-left: 2px;
+}
+
+/* Glassmorphism Utilities */
+.glass {
+  @apply bg-white/80 dark:bg-slate-950/60 backdrop-blur-lg border border-white/20 dark:border-white/10 shadow-md;
+}
+
+.glass-card {
+  @apply bg-card/70 dark:bg-card/50 backdrop-blur-md border-white/20 shadow-xl transition-all duration-300 hover:shadow-2xl hover:-translate-y-1;
+}
+
+/* Chat Message Prose Styling */
+.prose-chat {
+  color: inherit;
+}
+
+.prose-chat h1,
+.prose-chat h2,
+.prose-chat h3,
+.prose-chat h4,
+.prose-chat h5,
+.prose-chat h6 {
+  color: inherit;
+  font-weight: 600;
+}
+
+.prose-chat p {
+  color: inherit;
+}
+
+.prose-chat strong {
+  color: inherit;
+  font-weight: 600;
+}
+
+.prose-chat code {
+  color: inherit;
+  font-size: 0.875em;
+}
+
+.prose-chat ul,
+.prose-chat ol {
+  color: inherit;
+}
+
+.prose-chat li {
+  color: inherit;
+}
+
+.prose-chat a {
+  color: hsl(var(--primary));
+  text-decoration: underline;
+}
+
+@media print {
+
+  /* Force everything to zero to prevent offset */
+  /* Force everything to zero to prevent offset */
+  html,
+  body,
+  #root {
+    margin: 0 !important;
+    padding: 0 !important;
+    height: auto !important;
+    width: 100% !important;
+    overflow: visible !important;
+    display: block !important;
+  }
+
+  /* Hide browser default headers/footers and set size */
+  @page {
+    margin: 0;
+    size: A4 portrait;
+  }
+
+  /* Reset body margins */
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  /* Reset layout constraints on ancestors of the content */
+  /* This identifies the chain of divs from root to the page */
+  /* Reset layout constraints on ancestors of the content */
+  /* This identifies the chain of divs from root to the page */
+  /* Ensure no scroll containers trap content */
+  .workspace-desktop,
+  .preview-pane,
+  .document-preview-container,
+  .preview-content-wrapper {
+    height: auto !important;
+    overflow: visible !important;
+    display: block !important;
+    position: static !important;
+    float: none !important;
+  }
+
+  /* Reset flex/grid on the wrapper too */
+  .preview-content-wrapper {
+    display: block !important;
+  }
+
+  /* Ensure pages render correctly but KEEP their internal layout (flex/grid) */
+  .a4-page {
+    visibility: visible !important;
+    position: relative !important;
+    display: block !important;
+    /* The page itself is a block */
+    animation: none !important;
+    transform: none !important;
+  }
+
+  /* Make sure children of the page are visible but DO NOT force display:block on them */
+  .a4-page * {
+    visibility: visible !important;
+  }
+
+  /* Specific overrides */
+  .workspace-desktop {
+    width: auto !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    flex: none !important;
+    grid: none !important;
+    display: block !important;
+    overflow: visible !important;
+  }
+
+  /* Hide the sidebar explicitly */
+  .chat-panel-container {
+    display: none !important;
+  }
+
+  .preview-pane {
+    width: 100% !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    background: transparent !important;
+  }
+
+  .document-preview-container {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .preview-content-wrapper {
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+  }
+
+  .document-preview {
+    font-size: 12pt;
+    line-height: 1.5;
+    color: black !important;
+  }
+
+  /* Force background graphics */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Explicitly hide navigation and other UI elements */
+  header,
+  nav,
+  .chat-panel,
+  button,
+  .no-print,
+  .workspace-mobile {
+    display: none !important;
+  }
+}
+
+/* Ensure pages are visible */
+.a4-page {
+  visibility: visible !important;
+}
+
+/* Ensure all content preserves colors */
+.a4-page,
+.a4-page * {
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+  color-adjust: exact !important;
+}
+
+/* Page Animations and Dimensions */
+@keyframes page-turn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) rotateX(-5deg);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) rotateX(0);
+  }
+}
+
+.a4-page {
+  animation: page-turn 0.6s ease-out;
+  transform-origin: top center;
+  position: relative;
+  width: 210mm;
+  /* Exact A4 dimensions */
+  min-height: 297mm;
+  /* Minimum height to ensure proper layout */
+  background: white;
+  margin: 0 auto 2rem auto;
+  padding: 20mm;
+  padding-bottom: 20mm;
+  /* Footer space for page numbers */
+  box-shadow: 0 10px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  color: #000000 !important;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 12pt;
+  /* Unify font size */
+  line-height: 1.5;
+  /* Unify line height */
+  letter-spacing: 0.3px;
+  /* Better letter spacing for readability */
+  overflow: hidden;
+  /* clip content that doesn't fit to alert user/dev */
+  page-break-after: always;
+  page-break-before: auto;
+  page-break-inside: avoid;
+  break-after: page;
+  break-before: auto;
+  break-inside: avoid;
+  /* Ensure colors are preserved */
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  color-adjust: exact;
+  border-radius: 4px;
+  /* Slight rounding for modern look */
+}
+
+.a4-page:last-child {
+  page-break-after: auto;
+  break-after: auto;
+}
+
+.page-break {
+  page-break-after: always;
+  break-after: page;
+}
+
+@media print {
+  .a4-page {
+    margin: 0 !important;
+    padding: 20mm !important;
+    padding-bottom: 20mm !important;
+    /* Footer space for page numbers */
+    box-shadow: none !important;
+    page-break-after: always;
+    break-after: page;
+    min-height: 297mm !important;
+    height: auto !important;
+    overflow: visible !important;
+    /* Ensure colors are preserved in print */
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  .a4-page:last-child {
+    page-break-after: auto;
+    break-after: auto;
+  }
+}
