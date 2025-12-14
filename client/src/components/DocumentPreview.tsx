@@ -175,72 +175,77 @@ export const DocumentPreview = forwardRef<DocumentPreviewHandle, DocumentPreview
         const elementWidth = pageElement.scrollWidth || pageElement.offsetWidth;
         const elementHeight = pageElement.scrollHeight || pageElement.offsetHeight;
         console.log(`Element dimensions: ${elementWidth}x${elementHeight}`);
+        // Scroll element into view and wait
+        pageElement.scrollIntoView({ behavior: 'instant', block: 'start' });
+        await new Promise(resolve => setTimeout(resolve, 100));
 
-        // Generate canvas with html2canvas
+        // Generate canvas with html2canvas - SIMPLIFIED configuration
         const canvas = await html2canvas(pageElement, {
-          scale: 2, // Higher quality
+          scale: 2,
           useCORS: true,
-          logging: false, // Reduce console noise
+          logging: true,
           backgroundColor: '#ffffff',
-          width: elementWidth,
-          height: elementHeight,
-          windowWidth: elementWidth,
-          windowHeight: elementHeight,
-          x: 0,
-          y: 0,
-          scrollX: 0,
-          scrollY: 0,
-          foreignObjectRendering: false,
-          imageTimeout: 0,
-          removeContainer: false,
           allowTaint: true,
-          onclone: (clonedDoc, clonedElement) => {
-            console.log('Cloning document for page', i + 1);
-            console.log('Cloned element:', clonedElement);
+          foreignObjectRendering: false, // DISABLED - can cause blank pages
+          onclone: (clonedDoc, element) => {
+            console.log('Cloning for page', i + 1);
 
-            // The clonedElement passed to onclone is the actual element being captured
-            const targetElement = clonedElement as HTMLElement;
+            // CRITICAL: Remove dark mode class from cloned document
+            clonedDoc.documentElement.classList.remove('dark');
+            clonedDoc.body.classList.remove('dark');
+            clonedDoc.documentElement.removeAttribute('data-theme');
+            clonedDoc.body.removeAttribute('data-theme');
 
-            if (targetElement) {
-              // Force all visibility on the target element
-              targetElement.style.visibility = 'visible';
-              targetElement.style.opacity = '1';
-              targetElement.style.display = 'block';
-              targetElement.style.position = 'relative';
+            // Force light mode styles on document
+            clonedDoc.documentElement.style.cssText = 'color-scheme: light !important; background: #ffffff !important;';
+            clonedDoc.body.style.cssText = 'color-scheme: light !important; background: #ffffff !important; color: #000000 !important;';
 
-              // Ensure white background
-              targetElement.style.backgroundColor = '#ffffff';
+            // Cast to HTMLElement
+            const clonedElement = element as HTMLElement;
 
-              // Make all text black
-              targetElement.style.color = '#000000';
+            // Force print-friendly styles on the main page element
+            clonedElement.style.cssText += '; background-color: #ffffff !important; color: #000000 !important; opacity: 1 !important; visibility: visible !important;';
 
-              // Process all child elements
-              const allElements = targetElement.querySelectorAll('*');
-              console.log(`Processing ${allElements.length} elements in cloned page`);
+            // Process all child elements
+            clonedElement.querySelectorAll('*').forEach((el) => {
+              const htmlEl = el as HTMLElement;
+              const tagName = htmlEl.tagName.toLowerCase();
+              const classList = htmlEl.className?.toString() || '';
 
-              allElements.forEach((el) => {
-                const htmlEl = el as HTMLElement;
+              // Check if this is the HR/divider element (thin black line)
+              const isHrDivider = (
+                tagName === 'hr' ||
+                (classList.includes('bg-black') && htmlEl.offsetHeight <= 8) ||
+                (htmlEl.offsetHeight <= 4 && htmlEl.offsetWidth > 100)
+              );
 
-                // Force visibility
-                htmlEl.style.visibility = 'visible';
-                htmlEl.style.opacity = '1';
+              if (isHrDivider) {
+                // Keep black background for HR/divider
+                htmlEl.style.cssText += '; background-color: #000000 !important; opacity: 1 !important;';
+              } else {
+                // For ALL other elements:
+                // 1. Force black text
+                // 2. Make backgrounds white/transparent
+                htmlEl.style.setProperty('color', '#000000', 'important');
+                htmlEl.style.setProperty('-webkit-text-fill-color', '#000000', 'important');
+                htmlEl.style.setProperty('opacity', '1', 'important');
+                htmlEl.style.setProperty('visibility', 'visible', 'important');
+                htmlEl.style.textShadow = 'none';
 
-                // Check if element is hidden by display
-                const computedStyle = clonedDoc.defaultView?.getComputedStyle(htmlEl);
-                if (computedStyle && computedStyle.display === 'none') {
-                  htmlEl.style.display = 'block';
+                // Make ALL non-divider backgrounds white/transparent
+                // This removes gray boxes from dark mode
+                if (!classList.includes('a4-page')) {
+                  htmlEl.style.setProperty('background-color', 'transparent', 'important');
+                  htmlEl.style.setProperty('background', 'transparent', 'important');
                 }
+              }
+            });
 
-                // Force black text for better contrast
-                htmlEl.style.color = '#000000';
-                // Remove webkit text fill colors that might cause issues
-                htmlEl.style.webkitTextFillColor = '#000000';
-              });
+            // Force black text on main element
+            clonedElement.style.setProperty('color', '#000000', 'important');
+            clonedElement.style.setProperty('-webkit-text-fill-color', '#000000', 'important');
 
-              console.log('Clone processing complete');
-            } else {
-              console.warn(`Could not access cloned element for page ${i + 1}`);
-            }
+            console.log('Print styles applied for page', i + 1);
           }
         });
 
@@ -301,10 +306,10 @@ export const DocumentPreview = forwardRef<DocumentPreviewHandle, DocumentPreview
 
         // Convert to image
         console.log('Converting to image...');
-        const imgData = canvas.toDataURL('image/jpeg', 1.0);
+        const imgData = canvas.toDataURL('image/png');
 
         // Validate image data
-        if (!imgData || imgData === 'data:,' || imgData === 'data:image/jpeg;base64,') {
+        if (!imgData || imgData === 'data:,' || imgData === 'data:image/png;base64,') {
           console.error(`Image data for page ${i + 1} is empty or invalid!`);
           console.log('Image data preview:', imgData.substring(0, 50));
           continue;
@@ -317,27 +322,21 @@ export const DocumentPreview = forwardRef<DocumentPreviewHandle, DocumentPreview
           pdf.addPage('a4', 'portrait');
         }
 
-        // Calculate dimensions to maintain aspect ratio
-        const canvasRatio = canvas.width / canvas.height;
-        const a4Ratio = A4_WIDTH_MM / A4_HEIGHT_MM;
+        // Calculate dimensions - fill width, maintain aspect ratio for height
+        const canvasAspectRatio = canvas.height / canvas.width;
+        const imgWidth = A4_WIDTH_MM;
+        const imgHeight = imgWidth * canvasAspectRatio;
+        const xOffset = 0;
+        // Center vertically if canvas is shorter than A4
+        const yOffset = Math.max(0, (A4_HEIGHT_MM - imgHeight) / 2);
 
-        let imgWidth = A4_WIDTH_MM;
-        let imgHeight = A4_HEIGHT_MM;
-        let xOffset = 0;
-        let yOffset = 0;
-
-        if (canvasRatio > a4Ratio) {
-          imgHeight = A4_WIDTH_MM / canvasRatio;
-          yOffset = (A4_HEIGHT_MM - imgHeight) / 2;
-        } else {
-          imgWidth = A4_HEIGHT_MM * canvasRatio;
-          xOffset = (A4_WIDTH_MM - imgWidth) / 2;
-        }
-
+        console.log(`Canvas ratio: ${canvasAspectRatio}, Image: ${imgWidth}x${imgHeight}mm`);
         console.log(`Adding image to PDF: pos(${xOffset}, ${yOffset}) size(${imgWidth}x${imgHeight})`);
 
         try {
-          pdf.addImage(imgData, 'JPEG', xOffset, yOffset, imgWidth, imgHeight, undefined, 'FAST');
+          // Use the calculated height to prevent compression
+          const finalHeight = Math.min(imgHeight, A4_HEIGHT_MM);
+          pdf.addImage(imgData, 'PNG', xOffset, yOffset, imgWidth, finalHeight, undefined, 'FAST');
           successfulPages++;
           console.log(`✓ Page ${i + 1} added successfully`);
         } catch (addImageError) {
