@@ -57,7 +57,7 @@ export default function Assignments() {
     const content = `${assignment.topic || assignment.subject}
 
 Subject: ${assignment.subject}
-${assignment.module ? `Module: ${assignment.module}
+${assignment.moduleNumber ? `Module: ${assignment.moduleNumber}${assignment.moduleName ? ` - ${assignment.moduleName}` : ''}
 ` : ''}
 
 ${assignment.content || 'No content generated yet.'}`;
@@ -136,7 +136,7 @@ ${assignment.content || 'No content generated yet.'}`;
                       <TableCell>
                         {assignment.topic || <span className="text-muted-foreground italic">Not set yet</span>}
                       </TableCell>
-                      <TableCell>{assignment.module || '-'}</TableCell>
+                      <TableCell>{assignment.moduleNumber || '-'}</TableCell>
                       <TableCell>
                         {new Date(assignment.createdAt).toLocaleDateString()}
                       </TableCell>

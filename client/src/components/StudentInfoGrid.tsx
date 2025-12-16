@@ -44,19 +44,23 @@ export function StudentInfoGrid({ assignment }: StudentInfoGridProps) {
 
                     <div className="flex gap-2">
                         <span className="font-bold min-w-[80px]">Assessment:</span>
-                        <span className="font-normal"></span>
+                        <span className="font-normal">{assignment.assessmentName || ''}</span>
                     </div>
 
-                    <div className="flex gap-2">
-                        <span className="font-bold min-w-[80px]">Module:</span>
-                        <span className="font-normal">{assignment.module || 'I'}</span>
-                    </div>
+                    {/* Only show Module field if moduleNumber is provided */}
+                    {assignment.moduleNumber && (
+                        <div className="flex gap-2">
+                            <span className="font-bold min-w-[80px]">Module:</span>
+                            <span className="font-normal">{assignment.moduleNumber}</span>
+                        </div>
+                    )}
                 </div>
             </div>
 
-            {(assignment.module || assignment.topic) && (
+            {/* Display module name below the student profile section - only if moduleNumber is provided */}
+            {assignment.moduleNumber && (
                 <div className="mb-4 font-bold text-base">
-                    Module {assignment.module || '1'}: {assignment.topic || ''}
+                    Module {assignment.moduleNumber}{assignment.moduleName ? `: ${assignment.moduleName}` : ''}
                 </div>
             )}
         </>

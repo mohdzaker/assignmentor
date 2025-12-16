@@ -126,7 +126,7 @@ export default function Dashboard() {
                       <div>
                         <p className="font-semibold text-foreground group-hover:text-primary transition-colors">{assignment.topic || assignment.subject}</p>
                         <p className="text-sm text-muted-foreground">
-                          {assignment.subject} • {assignment.wordLimit} words
+                          {assignment.subject}
                         </p>
                       </div>
                     </div>

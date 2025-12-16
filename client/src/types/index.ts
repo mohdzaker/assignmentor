@@ -13,8 +13,9 @@ export interface Assignment {
   id: string;
   subject: string;
   topic?: string;
-  module?: string;
-  wordLimit: number;
+  assessmentName?: string;
+  moduleNumber?: string;
+  moduleName?: string;
   content: string;
   createdAt: Date;
   updatedAt: Date;

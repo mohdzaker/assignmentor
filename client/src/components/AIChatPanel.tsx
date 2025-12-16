@@ -9,22 +9,21 @@ import { marked } from 'marked';
 interface AIChatPanelProps {
   onContentUpdate: (content: string) => void;
   assignmentTopic: string;
-  wordLimit: number;
   assignmentId: string;
   initialChats?: ChatMessage[];
 }
 
-export function AIChatPanel({ onContentUpdate, assignmentTopic, wordLimit, assignmentId, initialChats = [] }: AIChatPanelProps) {
+export function AIChatPanel({ onContentUpdate, assignmentTopic, assignmentId, initialChats = [] }: AIChatPanelProps) {
   const [messages, setMessages] = useState<ChatMessage[]>(() => {
     if (initialChats && initialChats.length > 0) {
       // Ensure timestamps are Date objects
       return initialChats.map(msg => ({ ...msg, timestamp: new Date(msg.timestamp) }));
     }
     // Show different greeting based on whether topic is set
-    const greeting = assignmentTopic 
+    const greeting = assignmentTopic
       ? `Hello! I'm here to help you write about "${assignmentTopic}". What would you like me to help with?`
       : `Hello! I'm your AI writing assistant. Please tell me the topic of your assignment to get started.`;
-    
+
     return [
       {
         id: '1',
@@ -116,8 +115,7 @@ export function AIChatPanel({ onContentUpdate, assignmentTopic, wordLimit, assig
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           prompt: input.trim(),
-          topic: assignmentTopic,
-          wordLimit: wordLimit
+          topic: assignmentTopic
         }),
       });
 
@@ -223,7 +221,7 @@ export function AIChatPanel({ onContentUpdate, assignmentTopic, wordLimit, assig
                 {message.role === 'user' ? (
                   <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
                 ) : (
-                  <div 
+                  <div
                     className="text-sm leading-relaxed prose prose-sm max-w-none dark:prose-invert
                       prose-p:my-2 prose-headings:my-2 prose-ul:my-2 prose-ol:my-2
                       prose-li:my-0 prose-strong:font-semibold prose-code:bg-muted/50

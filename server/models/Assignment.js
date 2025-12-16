@@ -3,8 +3,9 @@ import mongoose from 'mongoose';
 const assignmentSchema = new mongoose.Schema({
     subject: { type: String, required: true },
     topic: { type: String, default: '' },
-    module: String,
-    wordLimit: { type: Number, default: 0 },
+    assessmentName: String,
+    moduleNumber: String,
+    moduleName: String,
     content: { type: String, default: '' },
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     chatHistory: [{

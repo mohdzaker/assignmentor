@@ -85,7 +85,7 @@ export default function Workspace() {
     const content = `${assignment.topic || assignment.subject}
 
 Subject: ${assignment.subject}
-${assignment.module ? `Module: ${assignment.module}
+${assignment.moduleNumber ? `Module: ${assignment.moduleNumber}${assignment.moduleName ? ` - ${assignment.moduleName}` : ''}
 ` : ''}
 
 ${assignment.content || 'No content generated yet.'}`;
@@ -137,7 +137,7 @@ ${assignment.content || 'No content generated yet.'}`;
                 {assignment.topic ? `${assignment.subject} - ${assignment.topic}` : assignment.subject}
               </h1>
               <p className="text-xs sm:text-sm text-muted-foreground truncate">
-                {assignment.module ? `${assignment.module}` : 'Start by entering your assignment topic in chat'}
+                {assignment.moduleNumber ? `Module ${assignment.moduleNumber}${assignment.moduleName ? `: ${assignment.moduleName}` : ''}` : 'Start by entering your assignment topic in chat'}
               </p>
             </div>
           </div>
@@ -202,7 +202,6 @@ ${assignment.content || 'No content generated yet.'}`;
             <AIChatPanel
               onContentUpdate={handleContentUpdate}
               assignmentTopic={assignment.topic || assignment.subject}
-              wordLimit={assignment.wordLimit}
               assignmentId={assignment.id}
               initialChats={assignment.chatHistory}
             />
@@ -248,7 +247,6 @@ ${assignment.content || 'No content generated yet.'}`;
           <AIChatPanel
             onContentUpdate={handleContentUpdate}
             assignmentTopic={assignment.topic || assignment.subject}
-            wordLimit={assignment.wordLimit}
             assignmentId={assignment.id}
             initialChats={assignment.chatHistory}
           />

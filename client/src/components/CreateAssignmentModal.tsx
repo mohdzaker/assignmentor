@@ -11,13 +11,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { Loader2 } from 'lucide-react';
 
 interface CreateAssignmentModalProps {
@@ -27,8 +20,9 @@ interface CreateAssignmentModalProps {
 
 export function CreateAssignmentModal({ open, onOpenChange }: CreateAssignmentModalProps) {
   const [subject, setSubject] = useState('');
-  const [module, setModule] = useState('');
-  const [wordLimit, setWordLimit] = useState('500');
+  const [assessmentName, setAssessmentName] = useState('');
+  const [moduleNumber, setModuleNumber] = useState('');
+  const [moduleName, setModuleName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   const { addAssignment } = useAssignments();
@@ -47,8 +41,9 @@ export function CreateAssignmentModal({ open, onOpenChange }: CreateAssignmentMo
     const assignment = await addAssignment({
       subject: subject.trim(),
       topic: '', // Topic will be entered in workspace chat
-      module: module.trim(),
-      wordLimit: parseInt(wordLimit),
+      assessmentName: assessmentName.trim() || undefined,
+      moduleNumber: moduleNumber.trim() || undefined,
+      moduleName: moduleNumber.trim() ? moduleName.trim() : undefined,
       content: '',
       userId: user.id,
     });
@@ -56,6 +51,14 @@ export function CreateAssignmentModal({ open, onOpenChange }: CreateAssignmentMo
     setIsLoading(false);
     onOpenChange(false);
     navigate(`/workspace/${assignment.id}`);
+  };
+
+  // Clear module name when module number is cleared
+  const handleModuleNumberChange = (value: string) => {
+    setModuleNumber(value);
+    if (!value.trim()) {
+      setModuleName('');
+    }
   };
 
   return (
@@ -77,28 +80,36 @@ export function CreateAssignmentModal({ open, onOpenChange }: CreateAssignmentMo
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="module">Module (Optional)</Label>
+            <Label htmlFor="assessmentName">Assessment Name (Optional)</Label>
             <Input
-              id="module"
-              value={module}
-              onChange={(e) => setModule(e.target.value)}
-              placeholder="e.g., Module 3"
+              id="assessmentName"
+              value={assessmentName}
+              onChange={(e) => setAssessmentName(e.target.value)}
+              placeholder="e.g., Internal Assessment 1"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="wordLimit">Word Limit</Label>
-            <Select value={wordLimit} onValueChange={setWordLimit}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select word limit" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="200">200 words</SelectItem>
-                <SelectItem value="500">500 words</SelectItem>
-                <SelectItem value="1000">1000 words</SelectItem>
-              </SelectContent>
-            </Select>
+            <Label htmlFor="moduleNumber">Module Number (Optional)</Label>
+            <Input
+              id="moduleNumber"
+              value={moduleNumber}
+              onChange={(e) => handleModuleNumberChange(e.target.value)}
+              placeholder="e.g., 3"
+            />
           </div>
+
+          {moduleNumber.trim() && (
+            <div className="space-y-2">
+              <Label htmlFor="moduleName">Module Name</Label>
+              <Input
+                id="moduleName"
+                value={moduleName}
+                onChange={(e) => setModuleName(e.target.value)}
+                placeholder="e.g., Data Structures"
+              />
+            </div>
+          )}
 
           <div className="flex justify-end gap-3 pt-4">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
